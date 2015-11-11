@@ -27,7 +27,7 @@ namespace ChromeSessionUSB
                         while (reader.Read())
                         {
                             byte[] hash = (byte[])(reader["encrypted_value"]);
-                            byte[] unprotected = ProtectedData.Unprotect(hash, null, DataProtectionScope.LocalMachine);
+                            byte[] unprotected = ProtectedData.Unprotect(hash, null, DataProtectionScope.CurrentUser);
                             String build = String.Empty;
                             for (int i = 0; i < unprotected.Length; i++)
                             {
@@ -72,7 +72,7 @@ namespace ChromeSessionUSB
                             {
                                 built[j] = (byte)tuple.Item2[j];
                             }
-                            update.Parameters.AddWithValue("encrypted", ProtectedData.Protect(built, null, DataProtectionScope.LocalMachine));
+                            update.Parameters.AddWithValue("encrypted", ProtectedData.Protect(built, null, DataProtectionScopeDataProtectionScope.CurrentUser));
                             update.Parameters.AddWithValue("creation_utc", tuple.Item1);
                             update.ExecuteNonQuery();
                         }
