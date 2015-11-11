@@ -33,9 +33,9 @@
             this.RestoreSessionButton = new System.Windows.Forms.Button();
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.advancedEncryptionSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setChromePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectDirectoryDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.deleteSessionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,7 +43,7 @@
             // 
             this.SaveSessionButton.Location = new System.Drawing.Point(12, 31);
             this.SaveSessionButton.Name = "SaveSessionButton";
-            this.SaveSessionButton.Size = new System.Drawing.Size(168, 41);
+            this.SaveSessionButton.Size = new System.Drawing.Size(138, 41);
             this.SaveSessionButton.TabIndex = 0;
             this.SaveSessionButton.Text = "Save Session";
             this.SaveSessionButton.UseVisualStyleBackColor = true;
@@ -51,11 +51,12 @@
             // 
             // RestoreSessionButton
             // 
-            this.RestoreSessionButton.Location = new System.Drawing.Point(186, 31);
+            this.RestoreSessionButton.Enabled = false;
+            this.RestoreSessionButton.Location = new System.Drawing.Point(156, 31);
             this.RestoreSessionButton.Name = "RestoreSessionButton";
-            this.RestoreSessionButton.Size = new System.Drawing.Size(163, 41);
+            this.RestoreSessionButton.Size = new System.Drawing.Size(193, 41);
             this.RestoreSessionButton.TabIndex = 1;
-            this.RestoreSessionButton.Text = "Restore Session";
+            this.RestoreSessionButton.Text = "Restore Saved Session";
             this.RestoreSessionButton.UseVisualStyleBackColor = true;
             this.RestoreSessionButton.Click += new System.EventHandler(this.RestoreSessionButton_Click);
             // 
@@ -73,24 +74,25 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.advancedEncryptionSettingsToolStripMenuItem,
-            this.setChromePathToolStripMenuItem});
+            this.setChromePathToolStripMenuItem,
+            this.deleteSessionsToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
-            // advancedEncryptionSettingsToolStripMenuItem
-            // 
-            this.advancedEncryptionSettingsToolStripMenuItem.Name = "advancedEncryptionSettingsToolStripMenuItem";
-            this.advancedEncryptionSettingsToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.advancedEncryptionSettingsToolStripMenuItem.Text = "Advanced encryption settings";
-            // 
             // setChromePathToolStripMenuItem
             // 
             this.setChromePathToolStripMenuItem.Name = "setChromePathToolStripMenuItem";
-            this.setChromePathToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.setChromePathToolStripMenuItem.Size = new System.Drawing.Size(195, 26);
             this.setChromePathToolStripMenuItem.Text = "Set Chrome path";
             this.setChromePathToolStripMenuItem.Click += new System.EventHandler(this.setChromePathToolStripMenuItem_Click);
+            // 
+            // deleteSessionsToolStripMenuItem
+            // 
+            this.deleteSessionsToolStripMenuItem.Name = "deleteSessionsToolStripMenuItem";
+            this.deleteSessionsToolStripMenuItem.Size = new System.Drawing.Size(195, 26);
+            this.deleteSessionsToolStripMenuItem.Text = "Delete Sessions";
+            this.deleteSessionsToolStripMenuItem.Click += new System.EventHandler(this.deleteSessionsToolStripMenuItem_Click);
             // 
             // ChromeSession
             // 
@@ -100,6 +102,7 @@
             this.Controls.Add(this.RestoreSessionButton);
             this.Controls.Add(this.SaveSessionButton);
             this.Controls.Add(this.MenuStrip);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MenuStrip;
             this.MaximizeBox = false;
@@ -118,9 +121,9 @@
         private System.Windows.Forms.Button RestoreSessionButton;
         private System.Windows.Forms.MenuStrip MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem advancedEncryptionSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setChromePathToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog selectDirectoryDialog;
+        private System.Windows.Forms.ToolStripMenuItem deleteSessionsToolStripMenuItem;
     }
 }
 

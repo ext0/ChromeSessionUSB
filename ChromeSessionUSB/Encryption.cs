@@ -35,35 +35,42 @@ namespace ChromeSessionUSB
 
         public static byte[] Encrypt<T>(byte[] valueBytes, string password) where T : SymmetricAlgorithm, new()
         {
-            if (_salt == null) throw new Exception("Need salt set in order to encrypt!");
-            byte[] vectorBytes = new byte[_ivSize];
-            random.NextBytes(vectorBytes);
-            byte[] saltBytes = Encoding.ASCII.GetBytes(_salt);
-            byte[] encrypted;
-            using (T cipher = new T())
+            try
             {
-                PasswordDeriveBytes _passwordBytes = new PasswordDeriveBytes(password, saltBytes, _hash, _iterations);
-                byte[] keyBytes = _passwordBytes.GetBytes(_keySize / 8);
-                cipher.Mode = CipherMode.CBC;
-                using (ICryptoTransform encryptor = cipher.CreateEncryptor(keyBytes, vectorBytes))
+                if (_salt == null) throw new Exception("Need salt set in order to encrypt!");
+                byte[] vectorBytes = new byte[_ivSize];
+                random.NextBytes(vectorBytes);
+                byte[] saltBytes = Encoding.ASCII.GetBytes(_salt);
+                byte[] encrypted;
+                using (T cipher = new T())
                 {
-                    using (MemoryStream to = new MemoryStream())
+                    PasswordDeriveBytes _passwordBytes = new PasswordDeriveBytes(password, saltBytes, _hash, _iterations);
+                    byte[] keyBytes = _passwordBytes.GetBytes(_keySize / 8);
+                    cipher.Mode = CipherMode.CBC;
+                    using (ICryptoTransform encryptor = cipher.CreateEncryptor(keyBytes, vectorBytes))
                     {
-                        using (CryptoStream writer = new CryptoStream(to, encryptor, CryptoStreamMode.Write))
+                        using (MemoryStream to = new MemoryStream())
                         {
-                            writer.Write(valueBytes, 0, valueBytes.Length);
-                            writer.FlushFinalBlock();
-                            encrypted = to.ToArray();
+                            using (CryptoStream writer = new CryptoStream(to, encryptor, CryptoStreamMode.Write))
+                            {
+                                writer.Write(valueBytes, 0, valueBytes.Length);
+                                writer.FlushFinalBlock();
+                                encrypted = to.ToArray();
+                            }
                         }
                     }
-                }
 
-                cipher.Clear();
+                    cipher.Clear();
+                }
+                byte[] ret = new byte[encrypted.Length + vectorBytes.Length];
+                vectorBytes.CopyTo(ret, 0);
+                encrypted.CopyTo(ret, 16);
+                return ret;
             }
-            byte[] ret = new byte[encrypted.Length + vectorBytes.Length];
-            vectorBytes.CopyTo(ret, 0);
-            encrypted.CopyTo(ret, 16);
-            return ret;
+            catch
+            {
+                return null;
+            }
         }
 
         public static byte[] Decrypt(byte[] bytes, string password)
@@ -73,34 +80,40 @@ namespace ChromeSessionUSB
 
         public static byte[] Decrypt<T>(byte[] valueBytes, string password) where T : SymmetricAlgorithm, new()
         {
-            byte[] vectorBytes = new byte[_ivSize];
-            Buffer.BlockCopy(valueBytes, 0, vectorBytes, 0, _ivSize);
-            byte[] data = new byte[valueBytes.Length - _ivSize];
-            Buffer.BlockCopy(valueBytes, _ivSize, data, 0, valueBytes.Length - _ivSize);
-            byte[] saltBytes = Encoding.ASCII.GetBytes(_salt);
-            byte[] decrypted;
-            int decryptedByteCount = 0;
-            using (T cipher = new T())
-            {
-                PasswordDeriveBytes _passwordBytes = new PasswordDeriveBytes(password, saltBytes, _hash, _iterations);
-                byte[] keyBytes = _passwordBytes.GetBytes(_keySize / 8);
-                cipher.Mode = CipherMode.CBC;
-                using (ICryptoTransform decryptor = cipher.CreateDecryptor(keyBytes, vectorBytes))
+            try {
+                byte[] vectorBytes = new byte[_ivSize];
+                Buffer.BlockCopy(valueBytes, 0, vectorBytes, 0, _ivSize);
+                byte[] data = new byte[valueBytes.Length - _ivSize];
+                Buffer.BlockCopy(valueBytes, _ivSize, data, 0, valueBytes.Length - _ivSize);
+                byte[] saltBytes = Encoding.ASCII.GetBytes(_salt);
+                byte[] decrypted;
+                int decryptedByteCount = 0;
+                using (T cipher = new T())
                 {
-                    using (MemoryStream from = new MemoryStream(data))
+                    PasswordDeriveBytes _passwordBytes = new PasswordDeriveBytes(password, saltBytes, _hash, _iterations);
+                    byte[] keyBytes = _passwordBytes.GetBytes(_keySize / 8);
+                    cipher.Mode = CipherMode.CBC;
+                    using (ICryptoTransform decryptor = cipher.CreateDecryptor(keyBytes, vectorBytes))
                     {
-                        using (CryptoStream reader = new CryptoStream(from, decryptor, CryptoStreamMode.Read))
+                        using (MemoryStream from = new MemoryStream(data))
                         {
-                            decrypted = new byte[data.Length];
-                            decryptedByteCount = reader.Read(decrypted, 0, decrypted.Length);
+                            using (CryptoStream reader = new CryptoStream(from, decryptor, CryptoStreamMode.Read))
+                            {
+                                decrypted = new byte[data.Length];
+                                decryptedByteCount = reader.Read(decrypted, 0, decrypted.Length);
+                            }
                         }
                     }
+
+                    cipher.Clear();
                 }
 
-                cipher.Clear();
+                return decrypted;
             }
-
-            return decrypted;
+            catch
+            {
+                return null;
+            }
         }
     }
 }

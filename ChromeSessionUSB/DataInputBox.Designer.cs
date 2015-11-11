@@ -83,6 +83,7 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.inputTextBox);
             this.Controls.Add(this.textLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
