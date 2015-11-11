@@ -16,7 +16,11 @@ namespace ChromeSessionUSB
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ChromeSession());
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler((obj, e) =>
+            {
+                Configuration.writeConfiguration();
+            });
+            ChromeHandler.start();
         }
     }
 }
