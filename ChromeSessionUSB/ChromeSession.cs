@@ -68,19 +68,10 @@ namespace ChromeSessionUSB
                 DataInputBox box = new DataInputBox("Password entry", "Create password for securing session data", true);
                 if (box.ShowDialog() == DialogResult.OK)
                 {
-                    Cryptography.updateSalt();
-                    byte[] encrypted = Cryptography.Encrypt(built, box.getInputText().Trim());
-                    if (encrypted == null)
-                    {
-                        MessageBox.Show("The inputted credentials were incorrect! Please try again.");
-                        return;
-                    }
-                    File.WriteAllBytes("session-data", encrypted);
-                    RestoreSessionButton.Enabled = true;
-                    MessageBox.Show("Data saved and secured at \"" + Environment.CurrentDirectory + "\\session-data\"", "Complete!");
+                    password = box.getInputText().Trim();
                 }
             }
-            else
+            if (password != null)
             {
                 Cryptography.updateSalt();
                 byte[] encrypted = Cryptography.Encrypt(built, password);
